@@ -2,6 +2,8 @@
 ## Kubernetes multinode setup 
 ###  we have 3 machines; 1 master and 2 worker nodes
 ## Pre-requisite 
++ amazon linux 2 OS
++ master t2.medium and worker t2.micro 
 
 
 ## Installing  docker and kubeadm in all the nodes 
