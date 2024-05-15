@@ -6,36 +6,43 @@
 + master t2.medium and worker t2.micro 
 
 
-## Installing  docker and kubeadm in all the nodes 
+## Installing  docker in all the nodes 
  ```
- yum  install  docker kubeadm  -y
+ yum  install  docker  -y
  ```
-## if kubeadm is not present in your repo 
+## now install kubeadm  and configure yum
  you can browse this link [kubernetes repo](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)  <br/>
  
-## yum can be configured by running this command 
+## or yum can be configured by running this command 
 ```
-cat  <<EOF  >/etc/yum.repos.d/kube.repo
-[kube]
-baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
-gpgcheck=0
+cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.30/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.30/rpm/repodata/repomd.xml.key
+exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
 EOF
 ```
 ## now run 
 ```
-yum update ; yum install kubeadm -y
+yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes --disableplugin=priorities
 ```
 
 ## Start service of docker & kubelet in all the nodes 
  ```
  systemctl enable --now  docker kubelet
  ```
-## for kernel configuration
+## for kernel configuration and ip tables
 ```
 modprobe br_netfilter
 ```
 ```
 echo '1' > /proc/sys/net/ipv4/ip_forward
+```
+```
+echo 1 > /proc/sys/net/bridge/bridge-nf-call-iptables
 ```
  # Do this only on Kubernetes Master 
  We are here using Calico Networking, so we need to pass some parameter 
