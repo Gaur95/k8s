@@ -5,3 +5,25 @@ metadata:
 data:
   hello: world
   cool: xyz
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp
+spec:
+  containers:
+  - name: myapp
+    image: httpd
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80
+    env:
+      - name: hello
+        valueFrom:
+          configMapKeyRef:
+            name: mycmap  
+            key: hello
+
