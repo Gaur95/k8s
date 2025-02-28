@@ -37,9 +37,11 @@ metadata:
   name: kubernetes-dashboard
   namespace: kubernetes-dashboard
 spec:
+  type: NodePort
   ports:
     - port: 443
       targetPort: 8443
+      nodePort: 30010
   selector:
     k8s-app: kubernetes-dashboard
 
@@ -128,9 +130,9 @@ metadata:
   name: kubernetes-dashboard
 rules:
   # Allow Metrics Scraper to get metrics from the Metrics server
-  - apiGroups: ["metrics.k8s.io"]
-    resources: ["pods", "nodes"]
-    verbs: ["get", "list", "watch"]
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["*"]
 
 ---
 
